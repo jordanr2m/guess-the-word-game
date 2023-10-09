@@ -50,7 +50,7 @@ h1 {
 }
 
 .highlight {
-  padding: 0.25em;
+  padding: 0.5em;
   background: #ffe2d6;
   font-size: 1em;
 }
@@ -134,7 +134,7 @@ input:focus {
   color: white;
 }
 
-/* animatied background */
+/* animated background */
 .win {
   padding: 0 1em;
   background: linear-gradient(-45deg, #ff9d64, #f5620c);
