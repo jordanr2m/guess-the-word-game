@@ -27,7 +27,7 @@ const getWord = async function () {
     const wordArray = data.split("\n"); // Turn text list into an array to select random word
     // console.log(wordArray);
     const randomIndex = Math.floor(Math.random() * wordArray.length);
-    word = wordArray[randomIndex].trim();
+    word = wordArray[randomIndex].trim(); // Removes white space from word
     letterToSymbol(word);
 }
 

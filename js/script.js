@@ -72,5 +72,42 @@ const makeGuess = function (guess) {
     } else {
         guessedLetters.push(guess);
         console.log(guessedLetters); // Verfiy letters are added to array
+        showGuesses();
+        updateWordInProgress(guessedLetters);
     }
 };
+
+// Function to show guessed letters
+const showGuesses = function () {
+    guessedLettersElement.innerHTML = ""; // Clear first to prevent duplicate letters
+    for (letter of guessedLetters) {
+        let listItem = document.createElement("li");
+        listItem.innerText = letter;
+        guessedLettersElement.append(listItem);
+    }
+};
+
+// Function to update word in progress
+const updateWordInProgress = function (guessedLetters) {
+    const wordUpper = word.toUpperCase(); // prevents casing issues
+    const wordArray = wordUpper.split(""); // turn word into an array
+    // console.log(wordArray);
+    const updatedCharacters = []; // array to hold updated word
+    for (const letter of wordArray) {
+        if (guessedLetters.includes(letter)) {
+            updatedCharacters.push(letter.toUpperCase());
+        } else {
+            updatedCharacters.push("●");
+        }
+    }
+    wordInProgress.innerText = updatedCharacters.join("");
+    checkWinner(); // check if player won
+}
+
+// Function to check if player won - Must remember case sensitivity!!
+const checkWinner = function () {
+    if (wordInProgress.innerText === word.toUpperCase()) {
+        guessMessage.classList.add("win");
+        guessMessage.innerHTML =  `<p class="highlight">You guessed correct the word! Congrats!</p>`;
+    }
+}
