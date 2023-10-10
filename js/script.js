@@ -16,11 +16,25 @@ const guessMessage = document.querySelector(".message");
 const playAgainButton = document.querySelector(".play-again");
 
 // Starting word to test game with
-const word = "Magnolia";
-
+let word = "Magnolia";
 // Empty array to hold letters guessed by the player
 const guessedLetters = [];
+// Global variable for number of guesses
+let numGuesses = 8;
 
+// Async function to connect to API
+const getWord = async function () {
+    const response = await fetch("https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt");
+    const data = await response.text();
+    // console.log(data); - Check that it is connected to API
+    const wordArray = data.split("\n"); 
+    // console.log(wordArray); - Check that words are in an array
+    const randomIndex = Math.floor(Math.random() * wordArray.length);
+    word = wordArray[randomIndex].trim(); // remove whitespace from word
+    placeholder(word); // call function and pass new word as argument. Removed function call from global space (below) to here.
+}
+// Start the game!
+getWord();
 
 // Display circles symbols as placeholders for chosen word's letters
 const placeholder = function (word) {
@@ -31,7 +45,7 @@ const placeholder = function (word) {
     }
     wordInProgress.innerText = placeholderLetters.join(""); // Rejoins array together (otherwise, circles will be separated by a coma)
 };
-placeholder(word);
+// placeholder(word);
 
 
 // When player clicks "Guess" button
@@ -39,7 +53,7 @@ guessButton.addEventListener("click", function (e) {
     e.preventDefault(); /* Because you’re working with a form, you want to prevent the default behavior of clicking a button, the form submitting, and then reloading the page. To prevent this reloading behavior, add this line of code at the top of the callback function */
     guessMessage.innerText = ""; // Clears guess message on new guess
     const guess = guessText.value; // Grabs value of the #letter input element
-    console.log(guess); // shows letter in console
+    // console.log(guess); - shows letter in console
 
     const goodGuess = validateInput(guess); // Check to see if it is a valid guess. "If it is a good guess, do the following:"
     if (goodGuess) {
@@ -71,8 +85,9 @@ const makeGuess = function (guess) {
         guessMessage.innerText = "You've already guessed that letter! Please try again";
     } else {
         guessedLetters.push(guess);
-        console.log(guessedLetters); // Verfiy letters are added to array
+        // console.log(guessedLetters); - Verfiy letters are added to array
         showGuesses();
+        updateGuessesRemaining(guess);
         updateWordInProgress(guessedLetters);
     }
 };
@@ -103,6 +118,26 @@ const updateWordInProgress = function (guessedLetters) {
     wordInProgress.innerText = updatedCharacters.join("");
     checkWinner(); // check if player won
 }
+
+// Function to update guess count
+const updateGuessesRemaining = function (guess) {
+    const wordUpper = word.toUpperCase();
+    if (!wordUpper.includes(guess)) {
+        guessMessage.innerText = `Nice try, but the letter ${guess} is not in the word.`;
+        numGuesses -= 1;
+    } else {
+        guessMessage.innerText = `Good guess! The word has the letter ${guess}.`;
+    }
+
+    if (numGuesses === 0) {
+        guessMessage.innerHTML = `Game over! The word was <span class="highlight">${word}</span>`;
+        numberSpan.innerText = `0 guesses`;
+    } else if (numGuesses === 1) {
+        numberSpan.innerText = `1 guess`;
+    } else {
+        numberSpan.innerText = `${numGuesses} guesses`
+    }
+};
 
 // Function to check if player won - Must remember case sensitivity!!
 const checkWinner = function () {
