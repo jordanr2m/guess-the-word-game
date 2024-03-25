@@ -138,7 +138,7 @@ input:focus {
 .win {
   padding: 0 1em;
   background: linear-gradient(-45deg, #ff9d64, #f5620c);
-  background-size: 400% 400%;
+  background-size: 400% 400%; /* Zooms in on gradient */
   animation: gradient 2s ease infinite;
 }
 
